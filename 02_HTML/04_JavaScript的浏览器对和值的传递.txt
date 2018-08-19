@@ -1,0 +1,208 @@
+1：事件的组成元素：
+
+	A：事件源
+
+	B：事件
+
+	C：事件处理者
+
+鼠标单击：
+	事件源：鼠标
+	事件：单击
+	事件处理者：函数。
+
+
+
+
+3：JavaScript控制浏览器对象
+	
+	<script languge="javascript">
+		function xx(){
+		
+		}
+	</script>
+	<body onLoad = "xx">
+
+	<script language="javascript">
+		window.onload = function(){
+			
+		}
+	</script>
+
+	<body></body>
+
+	
+	<input type="button" id="button1" onClick = "xx"/>
+
+	document.getElementById("button1").onclick = function(){
+		
+	}
+
+
+4：
+DHTML：Document HTML。
+
+Window：
+属性:
+	dialogArguments 设置或获取传递给模式对话框窗口的变量或变量数组。 
+	dialogHeight 设置或获取模式对话框的高度。 
+	dialogLeft 设置或获取模式对话框的左坐标。 
+	dialogTop 设置或获取模式对话框的顶坐标。 
+	dialogWidth 设置或获取模式对话框的宽度。
+	
+	opener 设置或获取创建当前窗口的窗口的引用。(子父窗口) 
+	parent 获取对象层次中的父窗口(内嵌框架)
+
+	
+	returnValue 设置或获取从模式对话框返回的值。 
+	self 获取对当前窗口或框架的引用。 
+	status 设置或获取位于窗口底部状态栏的信息。 
+	top 获取最顶层的祖先窗口。
+	
+集合：
+	frames：获取窗口中的框架集合。
+	frames[0],frames[1],frames[2];
+	frames["框架名称"]
+
+
+方法：
+	//弹出对话框
+	alert 显示包含由应用程序自定义消息的对话框
+	confirm 显示一个确认对话框，其中包含一个可选的消息和确定取消按钮。 
+	prompt 显示一个提示对话框，其中带有一条消息和一个输入框。 
+	close();关闭窗口
+
+	
+	//操作定时器
+	setInterval 每经过指定毫秒值后计算一个表达式。 
+	setTimeout 经过指定毫秒值后计算一个表达式。 
+	clearInterval 使用 setInterval 方法取消先前开始的间隔事件。 
+	clearTimeout 取消先前用 setTimeout 方法设置的超时事件。 
+
+
+	//窗口对象的管理。
+	open 打开新窗口并装入给定 URL 的文档。 
+	showModalDialog 创建一个显示指定 HTML 文档的模式对话框。 
+	showModelessDialog 创建一个显示指定 HTML 文档的非模式对话框。 
+
+
+History对象：
+
+属性
+	length
+
+方法
+	back
+	forward
+	go(正数1) == forward
+	go(-1) == back
+
+	验证数据出错后，使用back回到原先的页面，能保留住原先的数据。
+
+
+
+Location对象：
+属性：
+	href:：产生新的历史记录。
+方法：
+	reload:用于子窗口刷新父窗口的数据。
+
+	replace:装入新的址址。不产生历史记录
+
+
+
+
+
+Document对象
+集合：
+
+	all	返回对象所包含的元素集合的引用。 
+	forms   获取以源顺序排列的文档中所有 form 对象的集合。 
+	frames  获取给定文档定义或与给定窗口关联的文档定义的所有 window 对象的集合。 
+	links   获取文档中所有指定了 HREF 属性的 a 对象和所有 area 对象的集合。 
+
+	window.frames  == document.frames
+
+方法：
+	createAttribute 以指定名称创建 attribute 对象。  <table border="1" width="100%">
+	createComment 以指定数据创建 comment 对象。	<!--注释 --> 
+	createElement 为指定标签创建一个元素的实例。 <table></table> <tr></tr> 
+	createTextNode 从指定值中创建文本字符串。	<td>XXX</td>
+	
+
+	getElementById 获取对 ID 标签属性为指定值的第一个对象的引用。 
+	getElementsByName 根据 NAME 标签属性的值获取对象的集合。 
+		返回数组。用于获取名称相同的元素的集合。
+
+	getElementsByTagName 获取基于指定元素名称的对象集合。
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+用于控制表单元素与非表单元素。
+
+A：表格的显示与隐藏
+innerHTML
+innerText
+style.display：控件的隐藏与显示。
+
+
+B：表单元素：
+	提交按纽：验证方法必须要返回true或者false来控制是否进行表单的提交。
+
+	普通按纽。
+		常用表单控件的控制方法
+
+		value:		文本框、下拉框、文本域、密码框、隐藏域
+		checked		单选框、复选框
+		selected	列表框
+		readonly
+		disabled
+
+
+JavaScript中值的传递：
+
+	A：页面之间传递值。
+		1：表单元素值的传递
+			value.
+
+		2：非表单元素值的传递。
+			innerHTML:以HTML的样式格式化输出。
+			innerText:以文本的样式原样输出。
+
+	B：弹出窗口之间传递
+		1：window.open();
+
+		//父窗口向子窗口传值
+			var url = "Open_Child.html?id=1&name=admin";
+			在open_child.html中是无法获取参数值的。
+
+			但是如果是动态语言的话，
+			var url = "Open_Child.jsp?id=1&name=admin";
+
+			open_child.jsp中获取参数的值为：
+
+			String param_id = request.getParameter("id");			//1
+			String paramname = request.getParameter("name");		//admin
+
+		//子窗口向父窗口传值。
+			
+			window.opener获取父窗口对象的引用。
+
+
+		2：window.showModalDialog();
+
+		3：window.showModelLessDialog();
+			
+	C：框架之间传递
+		

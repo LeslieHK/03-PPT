@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!ELEMENT students (student+)>
+	<!ELEMENT student (name,age,sex*)>
+	<!ATTLIST student stuid ID #REQUIRED>
+	<!ELEMENT name (#PCDATA)>
+	<!ELEMENT age (#PCDATA)>
+	<!ELEMENT sex (#PCDATA)>
+	<!ENTITY  addr "这是一个地址">

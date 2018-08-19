@@ -1,0 +1,592 @@
+中间件：
+	jsp中间件：将服务端的语言解析成客户端所认识的语言(HTML,CSS,JavaScript)
+
+
+	Jsp:
+		开源：Tomcat/Resin/JBoss
+
+		商业：WebLogic/WebShper
+
+
+
+
+
+
+
+
+
+1：Tomcat的使用
+	bin目录
+		stratup.bat
+
+		启动startup.bat时，必须指定Java_Home的环境变量。
+
+		Java_HOME指向JDK的安装目录。
+
+
+		在IE中访问
+
+		http://localhost:8080/
+
+		http://127.0.0.1:8080
+
+		能出现Tomcat的欢迎页面，表示Tomcat正常启动。
+
+
+
+
+
+	conf/config目录
+
+		server.xml
+			A：端口号的配置。
+
+			B：配置虚拟目录。
+
+
+		tomcat-users.xml:
+			配置Tomcat中的管理用户
+
+
+		web.xml
+			所有部署在Tomcat上面的WEB程序(webapps目录下的工程)共享的一个配置文件。
+
+			是否显示目录列表信息。
+
+			<init-param>
+			    <param-name>listings</param-name>
+			    <param-value>false|true</param-value>
+			</init-param>		
+			
+			//设置超时时间
+			<session-config>
+				<session-timeout>30</session-timeout>
+			</session-config>		
+
+			mime-mapping：
+				Tomcat所能解析的文件类型。
+				扩展名与多媒体文件的映射。主要用于下载。
+
+
+		    <welcome-file-list>
+			<welcome-file>index.html</welcome-file>
+			<welcome-file>index.htm</welcome-file>
+			<welcome-file>index.jsp</welcome-file>
+		    </welcome-file-list>
+
+
+	lib目录
+		Tomcat的jar包目录。
+
+	webapps
+		用于部署WEB应用程序。
+
+	work
+		用于存放JSP文件编译成Class文件的目录。
+
+
+
+2：MyEclipse与Tomcat的整合
+
+	A：在MyEclipse中配置Tomcat和Tomcat中使用的JDK
+
+	B：在MyElipcse中启动Tomcat.
+
+	C：将WEB程序部署到Tomcat中
+		1：通过MyEclipse的部署功能实现。
+		
+		2：通过虚拟目录配置。
+
+	<Context path="/XXX" docBase="C:\Documents and Settings\ctd\workspace\Second_Web\WebRoot" reloadable="true">
+	
+	</Context>
+
+		
+5：Servlet
+	
+	A：Servlet的定义与作用。
+
+	B：Serlvet的体系结构
+		Servlet
+		   |
+		   |
+		GenericServlet
+		   |
+		   |
+		HttpServlet
+		   |
+		   |
+		用户自定义的Servlet.
+
+	HttpServlet必须要运行在HTTP协议中。必须用WEB网页的方式调用。
+
+
+
+
+HttpServlet中的方法
+
+	
+	service(ServletRequest, ServletResponse):从GenericServlet中继承下来。
+
+
+	将service方法中对象转换成具有操作HTTP协议能力的对象
+	service(HttpServletRequest, HttpServletResponse)
+
+		String method = HttpServletRequest.getMothod();
+		
+		获取用户提交数据的方式，如果是GET提交，执行doGet方法
+
+		如果是Post提交，执行doPost方法。
+
+	doGet(HttpServletRequest, HttpServletResponse)
+	doPost(HttpServletRequest, HttpServletResponse)
+
+6：Servlet的开发：
+	GET：除了post请求之外就是GET请求。
+	Post：只有表单的method=post时候就是post请求。
+
+	重写了doGet与doPost方法。
+
+
+8：Servlet的配置
+
+	Http协议只识别网页的请求路径。Servlet是一个Java文件。
+
+	所以必须将Servlet的类映射成路径。
+
+	web.xml中进行映射,web.xml中映射的路径都是从工程的根目录路径开始算起的。
+
+
+9：部署
+	将Servlet部署到Tomcat中。
+
+10：运行
+	http://localhost:8080/WEB工程名称/serlvet在web.xml中的url-pattern名称。
+
+
+	客户端请求的路径----->web.xml中的url-pattern进行匹配。
+
+	如果匹配不成功。404错误
+
+	如果匹配成功，通过url-pattern去寻找对应的serlvet-name。
+
+	通过serlvet-name再加载对应的serlvet-class的类。
+
+	再根据用户的请求方式来执行doGet或者doPost方法。
+
+	然后request对象来获取客户端请求上来的数据。处理完成后，通过
+	
+	response将服务端的结果响应到客户端中。到此，一个HTTP交互的过程结束。
+
+
+	1个SErvlet可以由多个Servlet-mapping的映射。
+
+
+
+
+11：Servlet生命周期
+	
+	实例化
+	初始化
+	服务
+	销毁
+	不可用
+
+
+12：生命周期带来的问题：
+
+	A：Serlvet只实例化一次。所以会引来成员变量引的访问线程问题。
+
+	
+	解决方法：不要使用成员变量，使用局部变量。
+	
+	以其他的方式将局部变量当做成员变量的方式来使用。
+
+
+	
+	B：Servlet初始化问题：
+
+		实例化与初始化的运行阶段：
+		
+		Serlvet使用了懒加载(延迟加载)的模式。
+
+		取消Serlvet的懒加载方式
+		<servlet>
+			<servlet-name>TestLifeServlet</servlet-name>
+			<servlet-class>com.servlet.TestLifeServlet</servlet-class>
+			<load-on-startup>0</load-on-startup> 0---6的级别。数字越低，表示加载的级别越快。
+
+		</servlet>
+
+
+
+	C：Servlet卸载
+		
+		当Tomcat正常关闭或者将Servlet从web.xml移除的时候。将会执行
+		destory方法。
+
+
+
+
+13：Servlet中的常用类以及常用方法
+
+	A:ServletConfig：用于读取Servlet在web.xml中配置的一些信息。
+		
+		getServletName();
+	
+	B:ServletContext对象：用于操作Servlet的上下文环境(容器)的对象。
+
+		//获取上下文路径
+		context.getContextPath();
+	
+		//获取上下文初始化参数
+		context.getInitParameter(name);
+		context.getInitParameterNames();
+
+		servletContext获取是全局的配置参数
+			<context-param>
+				<param-name>global_i</param-name>
+				<param-value>10</param-value>
+			</context-param>
+
+
+		WEB程序中：
+			都是用于读取WebRoot下面的路径。
+
+			context.getRealPath(path);
+			context.getResource(path);
+			context.getResourceAsStream(path);
+
+		//操作作用域对象的方法
+		context.setAttribute(name, object);
+		context.getAttribute(name);
+		context.removeAttribute(name);
+		
+
+	C：ServletInputStream/ServletOutputStream
+
+		用于接收客户端发送的二进制流和往客户端响应二进制流。
+
+		主要用在文件上传与下载方面。
+
+
+	D：ServletRequest/HttpServletRequest对象：
+		// 用于获取服务端的一些信息。
+		String localAddr = request.getLocalAddr();
+		String localName = request.getLocalName();
+		int localPort = request.getLocalPort();
+		String serverName = request.getServerName();
+		int serverPort = request.getServerPort();
+
+
+		// 用于获取客户端的信息
+		String remoteAddr = request.getRemoteAddr();
+		String remoteHost = request.getRemoteHost();
+		int remotePort = request.getRemotePort();
+		String user = request.getRemoteUser();
+
+
+		// 用于获取路径的方法
+		String contextPath = request.getContextPath();
+		//用于获取地址栏中?后面的内容。
+		String queryString = request.getQueryString();
+		String uri = request.getRequestURI();
+		StringBuffer url = request.getRequestURL();
+
+
+	D:获取表单信息
+		POST与GET的区别。
+		Rqeuest:POST与GET的乱码解决。
+
+			
+		乱码产生的原因：
+
+			客户端的编码与服务端的编码不一致。
+
+Post的编码决定机制：
+	
+	A：request.setCharacterEncoding("服务端的编码")__硬编码
+
+	B：重新构建新的编码。____软编码
+		username = new String(username.getBytes("ISO-8859-1"),"GBK");
+	
+
+	C：过滤器
+
+
+GET的编码。
+	
+	(1):表单的GET
+		A：username = new String(username.getBytes("ISO-8859-1"),"GBK");
+	
+		B:server.xml中配置URIEncoding="GBK"[推荐]
+
+
+既不是POST也不是GET,
+
+解决方法：使用统一的编码机制进行编码与解码。
+	
+	String str = "你好";
+	try {
+		String a_1 = java.net.URLEncoder.encode(str, "UTF-8");
+		System.out.println(a_1);
+		String b_1 = java.net.URLDecoder.decode("%E4%BD%A0%E5%A5%BD",
+				"UTF-8");
+		System.out.println(b_1);
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
+
+
+
+
+D:ServletRresponse/HttpServletRespon
+
+	//清缓存。
+	//HTML的清缓存
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="expires" content="0">
+
+	response.setHeader("Pragma","No-cache"); 
+	response.setHeader("Cache-Control","no-cache"); 
+	response.setDateHeader("Expires", 0); 
+
+	response.setHeader(arg0, arg1);
+	response.setDateHeader(arg0, arg1);
+
+	//设置响应输出类型。
+	response.setContentType("text/html");
+	//获取输出流。
+	PrintWriter out = response.getWriter();
+
+	//获取输入流与输出流(文件上传与下载)
+	request.getInputStream/response.getOutputStream();
+	//Response的编码问题：
+	response.setCharacterEncoding(arg0);
+
+
+14：WEB组件之间的关系：
+
+A：重定向的特点：
+	1：发生客户端
+	2：地址栏发生变化
+	3：两个WEB组件不共享request的数据。(重定向是2次请求)
+	4：重定向只能传递文本类型的数据
+
+	服务端的方法：response.sendRedirect();
+
+	客户端的方法: window.location.href='URL地址'
+	
+
+
+B：请求转发：
+	1：发生在服务端
+
+	2：地址栏不会发生变化
+
+	3：两个WEB组件之间共享request的数据。(请发转发1次请求)
+
+	4：请求转发可以传递对象类型的数据。
+
+
+
+
+
+C：请求包含：
+	1：发生在服务端
+
+	2：地址栏不会发生变化
+
+	3：两个WEB组件之间共享request的数据。
+
+
+
+
+
+
+
+	
+请求包含与请求转发的区别：
+
+	调用请求转发后，页面将转发到另一个组件。转发之后的代码就不再运行。
+
+	调用请求包后：是将另一个组件的内容包含到页面中。包含之后的代码继续执行。
+
+
+
+15：数据的作用域：
+
+	作用：
+		存放数据，并且控制数据的生命周期。
+	作用域：表示数据在网页中的生命周期。
+
+	request作用域：
+
+	session作用域
+
+	serlvetContext作用域。(工程作用域、容器作用域)
+
+	操作作用域的三个方法：setAttribute()/getAttirbute/remvoeAttribute();
+
+
+
+
+
+
+
+A:request作用域：
+	
+	request作用域只配合请求转发对象使用。因为重定是2次请求。
+
+	为什么要将数据放到request作用域中：
+
+	在Servlet中将数据放到request作用域，就可以请求转发到JSP页面
+
+	JSp页面从作用域取出数据，进行显示。这样子，JSP页面就无需进行
+
+	任何的数据业务操作。只负责数据的显示。
+
+
+
+
+
+
+
+
+
+
+
+
+
+B：Session作用域：
+	HTTP协议无状态。如果要保存客户端的数据的解决方法：
+
+
+
+	1：使用Session来保存。Session保存的数据存放在服务端。sessionid存放在客户端。
+
+	2：Session是基于Cookie实现的。cookie保存sessionid.
+
+
+	session.getAttribute(arg0);
+	session.setAttribute(arg0, arg1);
+	session.removeAttribute(arg0);
+	
+	//获取Session创建时间
+	session.getCreationTime();
+	//获取服务端分配的SessionID号。
+	session.getId();
+	//断开Session。
+	session.invalidate();
+
+	//是否新建的Session
+	session.isNew();
+
+	//设置会话时长。默认时间长30分种，单位秒。
+	
+	//-1。
+	session.setMaxInactiveInterval(arg0);
+
+
+	Session的示例：
+
+	A：用户登录次数。
+
+	<a href="#" onclick="window.opener=null;window.open('','_self');window.close();"> 
+	不确认关闭 </a> 
+	在window.opener=null;window.close()之间加入window.open('','_self'); 
+
+ 
+
+Session注意的问题：
+
+A：Session在什么时候创建:
+	显示调用request.getSession(true)时才会创建;
+
+B：session在什么时候销毁：
+
+	正常注销：显示调用session.invalidate方法。
+
+	会话时间超过默认设定的会话时间，也会清空Session。
+	
+	非正常注销：网页关闭只是Session通道被关闭。
+
+		服务端为Session分配的内存并不销毁。在Session超时的销毁分配的Session
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ServletContext作用域：
+	生命周期：
+		工程启动(Tomcat启动)
+
+		工程结束(Tomcat结束)
+
+	一般用static关键字替代ServletContext作用域中保存的对象值。
+	
+
+
+
+
+过滤器
+
+过滤器：
+	对用户请求的数据进行过滤，然后将过滤后的数据再传递到WEB组件。
+
+
+
+过滤器的开发、配置、部署、运行阶段。
+
+	过滤链的作用：负责将过滤后的数据传递到下一个过滤器，如果没有下一个过滤器，
+
+	数据将直接到达WEB组件。
+	
+	配置：
+		A：一个对滤器可以对应多个过滤器的映射。
+	
+		B：过滤器的生命周期与Servlet一致。过滤器没有延迟加载机制。
+
+		C：过滤链必须执行下一个过滤器。否则数据会卡在过滤器中。
+
+
+
+
+编码过滤：
+	只针对PosT的提交请求，GET的提交请求是在server.xml中配置URIEncoding。
+
+登录过滤
+
+访问地址过滤
+
+
+过滤器的问题：
+	A：过滤器的先后顺序：
+		在web.xml中由filter-mapping的先后来决定过滤器的先后执行顺序。
+
+	B：过滤器只过滤匹配的URL路径。
+
+	C：过滤器只过滤重定向的请求，不过滤请求转发的请求。如果想让过滤器两种方式都
+
+	过滤的话，必须配置：
+	<filter-mapping>
+		<filter-name>IsLoginFilter</filter-name>
+		<url-pattern>/main.html</url-pattern>
+		<dispatcher>REQUEST</dispatcher>		//重定向请求
+		<dispatcher>FORWARD</dispatcher>		//转发请求
+	</filter-mapping>
+
+
+	D：在filter的<url-pattern>配置中，/与后缀名不能同时存在。
+
+

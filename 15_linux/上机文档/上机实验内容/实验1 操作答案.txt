@@ -1,0 +1,25 @@
+qld@qld-VirtualBox:~$ cd ~
+
+qld@qld-VirtualBox:~$ mkdir -m 777 ./dir1
+
+qld@qld-VirtualBox:~$ cd ./dir1
+
+qld@qld-VirtualBox:~$ sudo mkdir -m 700 ./dir2
+
+qld@qld-VirtualBox:~/dir1$ chmod 700 txt
+
+qld@qld-VirtualBox:~/dir1$ cp txt cp_txt1
+
+qld@qld-VirtualBox:~/dir1$ sudo cp txt ../dir2/cp_txt2
+
+qld@qld-VirtualBox:~$ sudo rm -r '/home/qld/dir2' 
+
+qld@qld-VirtualBox:~/dir1$ ln txt h_txt
+
+qld@qld-VirtualBox:~/dir1$ ln -s txt s_txt
+
+qld@qld-VirtualBox:~/dir1$ ls -lai
+
+
+
+
